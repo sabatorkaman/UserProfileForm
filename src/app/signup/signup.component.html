@@ -1,0 +1,43 @@
+<div class="card p-10" [formGroup]="signupForm">
+  <div class="flex flex-wrap gap-4  ">
+    <div class="flex-1">
+      <p-floatlabel variant="on">
+        <p-iconfield>
+          <input pInputText [disabled]="false" class="w-full"/>
+          <p-inputicon class="pi pi-user"/>
+        </p-iconfield>
+        <label> نام کاربری </label>
+      </p-floatlabel>
+      <small id="username-help">Enter your username to reset your password.</small>
+    </div>
+
+    <div class="flex-1">
+      <p-inputgroup>
+        <p-floatlabel variant="on">
+          <input pInputText [type]="showpass ? 'text' : 'password'" class="w-full"/>
+          <label>رمز عبور</label>
+        </p-floatlabel>
+        <p-inputgroup-addon>
+          <p-button (click)="showPassword()" [icon]=" showpass? 'pi pi-eye' : ' pi pi-eye-slash'"></p-button>
+        </p-inputgroup-addon>
+      </p-inputgroup>
+    </div>
+  </div>
+  <!--  col-->
+  <div class="flex flex-wrap gap-4 pt-10">
+    <div class="flex-auto">
+      <label for="hex" class="font-bold block mb-2"> Hex </label>
+      <input pInputText id="hex" class="w-full"/>
+    </div>
+    <div class="flex-auto">
+      <label for="alphabetic" class="font-bold block mb-2"> Alphabetic </label>
+      <input pInputText id="alphabetic" class="w-full"/>
+    </div>
+    <div class="flex-auto">
+      <label for="alphanumeric" class="font-bold block mb-2"> Alphanumeric </label>
+      <input pInputText id="alphanumeric" class="w-full"/>
+    </div>
+  </div>
+</div>
+
+
