@@ -1,20 +1,48 @@
-<div class="card p-10" [formGroup]="signupForm">
-  <div class="flex flex-wrap gap-4  ">
+<p-card class="card p-10  flex-col " [formGroup]="signupForm">
+  <!--  col1-->
+  <div class="flex flex-wrap gap-4 my-7  ">
+
     <div class="flex-1">
       <p-floatlabel variant="on">
         <p-iconfield>
-          <input pInputText [disabled]="false" class="w-full"/>
+          <input formControlName="username" pInputText [disabled]="false" class="w-full"
+                 [class.ng-invalid]="signupForm.get('username')?.invalid"
+                 [class.ng-dirty]="signupForm.get('username')?.touched"/>
           <p-inputicon class="pi pi-user"/>
         </p-iconfield>
         <label> نام کاربری </label>
       </p-floatlabel>
-      <small id="username-help">Enter your username to reset your password.</small>
+      @if (signupForm.get("username")?.touched && signupForm.get("username")?.errors?.['required']) {
+        <small class="text-red-500">
+          نام کاربری خود را ورد کنید
+        </small>
+      } @else if (signupForm.get("username")?.touched && signupForm.get("username")?.errors?.['minlength']) {
+        <small class="text-red-500">تعدا کمه</small>
+      } @else {
+        <small id="username-help">Enter your username to reset your password.</small>
+      }
     </div>
 
     <div class="flex-1">
+      <p-floatlabel variant="on">
+        <p-iconfield>
+          <input formControlName="email" type="email" pInputText [disabled]="false" class="w-full"
+                 [class.ng-invalid]="signupForm.get('email')?.invalid"
+                 [class.ng-dirty]="signupForm.get('mail')?.touched"/>
+          <p-inputicon class=" pi pi-envelope"/>
+        </p-iconfield>
+        <label> ایمیل </label>
+      </p-floatlabel>
+    </div>
+  </div>
+
+  <!--  col2-->
+
+  <div class="flex flex-wrap items-center gap-4 my-7">
+    <div class="flex-1">
       <p-inputgroup>
         <p-floatlabel variant="on">
-          <input pInputText [type]="showpass ? 'text' : 'password'" class="w-full"/>
+          <input formControlName="password" pInputText [type]="showpass ? 'text' : 'password'" class="w-full"/>
           <label>رمز عبور</label>
         </p-floatlabel>
         <p-inputgroup-addon>
@@ -22,22 +50,108 @@
         </p-inputgroup-addon>
       </p-inputgroup>
     </div>
+
+    @if (signupForm.get("password")?.touched && signupForm.get("password")?.errors?.['required']) {
+      <small>رمز عبور خود را وارد کنید</small>
+    } @else if (signupForm.get("password")?.touched && signupForm.get("password")?.errors?.['minlength']) {
+      <small>تعداد کلمات کمتر از حد مجاز</small>
+    }
+
+    <div class="flex-1">
+      <p-inputgroup>
+        <p-floatlabel variant="on">
+          <input formControlName="repeatPassword" pInputText [type]="showpass ? 'text' : 'password'" class="w-full"/>
+          <label> تکرار رمز عبور</label>
+        </p-floatlabel>
+        <p-inputgroup-addon>
+          <p-button (click)="showPassword()" [icon]=" showpass? 'pi pi-eye' : ' pi pi-eye-slash'"></p-button>
+        </p-inputgroup-addon>
+      </p-inputgroup>
+      @if (this.signupForm.valid && this.signupForm.get("repeatPassword")?.value == this.signupForm.get("password")?.value) {
+        @if (signupForm.get("repeatPassword")?.touched && signupForm.get("repeatPassword")?.errors?.['required']) {
+          <small>رمز عبور خود را وارد کنید</small>
+        } @else if (signupForm.get("repeatPassword")?.touched && signupForm.get("repeatPassword")?.errors?.['minlength']) {
+        }
+      }
+    </div>
   </div>
-  <!--  col-->
-  <div class="flex flex-wrap gap-4 pt-10">
-    <div class="flex-auto">
-      <label for="hex" class="font-bold block mb-2"> Hex </label>
-      <input pInputText id="hex" class="w-full"/>
+  <!--  col3-->
+  <div class="flex flex-wrap items-center gap-4 my-7">
+    <div class="flex-1">
+      <p-floatlabel variant="on">
+        <p-datepicker formControlName="date" styleClass="w-full" showIcon iconDisplay="input"/>
+        <label>تاریخ تولد</label>
+      </p-floatlabel>
     </div>
-    <div class="flex-auto">
-      <label for="alphabetic" class="font-bold block mb-2"> Alphabetic </label>
-      <input pInputText id="alphabetic" class="w-full"/>
-    </div>
-    <div class="flex-auto">
-      <label for="alphanumeric" class="font-bold block mb-2"> Alphanumeric </label>
-      <input pInputText id="alphanumeric" class="w-full"/>
+    <div class="flex-1 flex items-center gap-5">
+      <label>جنسیت</label>
+      <p-selectbutton formControlName="gender" [options]="stateOptions" optionValue="value">
+        <ng-template #item let-item>
+          <i [class]="item.logo"></i>
+        </ng-template>
+      </p-selectbutton>
     </div>
   </div>
-</div>
+
+  <!--  col4-->
+  <div class="flex flex-wrap items-center gap-4 my-7">
+    <div class="flex-1">
+      <p-floatlabel class="w-full" variant="on">
+        <p-select [options]="countries?.data" formControlName="birthplace" optionLabel="name" [filter]="true"
+                  filterBy="name"
+                  styleClass="w-full">
+          <ng-template let-country #item>
+            <div class=" flex gap-5">
+              <img src="{{country.flag}}" style="width: 20px; height: 10px"/>
+              <span>{{ country.name }}</span>
+            </div>
+          </ng-template>
+        </p-select>
+        <label>محل تولد</label>
+      </p-floatlabel>
 
 
+    </div>
+    <div class="flex-1 flex items-center gap-5">
+
+      <p-floatlabel class="w-full" variant="on">
+        <p-multiselect formControlName="favoriteCountries" [options]="countries?.data" optionLabel="name"
+                       styleClass="w-full " class="ng-invalid" display="chip">
+          <ng-template let-country #item>
+            <div class="flex items-center gap-2">
+              <img src="{{country.flag}}" style="width: 20px; height: 10px"/>
+              <div>{{ country.name }}</div>
+            </div>
+          </ng-template>
+          <ng-template #dropdownicon>
+            <i class="pi pi-map"></i>
+          </ng-template>
+
+        </p-multiselect>
+        <label>کشور مورد‌ علاقه </label>
+      </p-floatlabel>
+    </div>
+  </div>
+
+  <div class="flex justify-center w-full">
+    <p-button [disabled]="signupForm.invalid" (click)="submit()" class="submit">ثبت</p-button>
+
+  </div>
+</p-card>
+@if (submittedData) {
+  <div
+    class=" flex justify-center items-center  flex-col mt-5 w-[400px] m-auto p-4   text-right">
+    <h3 class="font-bold mb-3">اطلاعات ثبت‌شده:</h3>
+    <p>نام کاربری: {{ submittedData.username }}</p>
+    <p>:رمز عبور:{{ submittedData.password }}</p>
+    <p>تاریخ تولد: {{ submittedData.date | date:'yyyy/MM/dd' }}</p>
+    <p>جنسیت:{{ submittedData.gender }}</p>
+    <p>کشور موردعلاقه:{{ submittedData.favoriteCountries | json }}</p>
+    @for (c of submittedData.birthplace; track $index) {
+      <p>محل تولد:{{ c.name }}</p>
+    }
+  </div>
+
+}
+
+{{ signupForm.get("repeatPassword")?.value |json }}
