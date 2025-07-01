@@ -52,9 +52,6 @@
     </div>
 
     @if (signupForm.get("password")?.touched && signupForm.get("password")?.errors?.['required']) {
-      <small>رمز عبور خود را وارد کنید</small>
-    } @else if (signupForm.get("password")?.touched && signupForm.get("password")?.errors?.['minlength']) {
-      <small>تعداد کلمات کمتر از حد مجاز</small>
     }
 
     <div class="flex-1">
